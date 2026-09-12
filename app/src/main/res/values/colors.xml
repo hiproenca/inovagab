@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Cores Principais -->
+    <color name="primary">#1E293B</color>         <!-- Slate escuro  -->
+    <color name="primary_variant">#0F172A</color>  <!-- Slate ainda mais escuro -->
+    <color name="secondary">#3B82F6</color>       <!-- Azul utilitário/destaque -->
+
+    <!-- Tons de Superfície e Fundo -->
+    <color name="background">#F8FAFC</color>      <!-- Cinza gelo para background -->
+    <color name="surface">#FFFFFF</color>         <!-- Branco para cards/botões -->
+
+    <!-- Textos e Ícones -->
+    <color name="text_primary">#0F172A</color>    <!-- Texto escuro principal -->
+    <color name="text_secondary">#64748B</color>  <!-- Texto secundário/cinza médio -->
+
+    <!-- Estados de Apoio -->
+    <color name="success">#10B981</color>         <!-- Verde confirmação -->
+    <color name="error">#EF4444</color>           <!-- Vermelho alerta -->
 </resources>
