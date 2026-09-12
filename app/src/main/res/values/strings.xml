@@ -3,4 +3,11 @@
     <string name="login_operator">Entrar como Operador</string>
     <string name="login_manager">Entrar como Gerente</string>
     <string name="login_leader">Entrar como Líder</string>
+    <string name="logout_title">Sair</string>
+    <string name="p_operator">Bem-vindo, Operador</string>
+    <string name="p_manager">Bem-vindo, Gerente</string>
+    <string name="p_leader">Bem-vindo, Líder</string>
+    <string name="home_operator">Aqui você pode registrar e acompanhar suas ideias de inovação.</string>
+    <string name="home_manager">Painel de aprovação e acompanhamento das ideias da sua equipe.</string>
+    <string name="home_leader">Visão estratégica geral de todas as iniciativas de inovação da empresa.</string>
 </resources>
