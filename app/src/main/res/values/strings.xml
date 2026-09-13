@@ -10,4 +10,15 @@
     <string name="home_operator">Aqui você pode registrar e acompanhar suas ideias de inovação.</string>
     <string name="home_manager">Painel de aprovação e acompanhamento das ideias da sua equipe.</string>
     <string name="home_leader">Visão estratégica geral de todas as iniciativas de inovação da empresa.</string>
+    <string name="ideas_inovations_title">Ideias de inovação</string>
+    <string name="button_return_app">Voltar</string>
+    <string name="ideas_myideas_text">Minhas ideias</string>
+    <string name="new_idea_text">Nova ideia</string>
+    <string name="idea_notfound_text">Nenhuma ideia encontrada.</string>
+    <string name="approve_idea_text">Aprovar</string>
+    <string name="rejected_idea_text">Rejeitar</string>
+    <string name="idea_title_text">Título da Ideia</string>
+    <string name="idea_description_text">Descrição detalhada</string>
+    <string name="save_idea_text">Salvar Ideia</string>
+    <string name="inovations_idea_text">Ideias de Inovação</string>
 </resources>

@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,7 +29,7 @@ import com.hig.inovagab.model.UserRole
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(role: UserRole, onLogout: () -> Unit) {
+fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -57,6 +59,17 @@ fun HomeScreen(role: UserRole, onLogout: () -> Unit) {
                 UserRole.MANAGER -> ManagerContent()
                 UserRole.LEADER -> LeaderContent()
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = onNavigateToIdeas,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Text(stringResource(R.string.inovations_idea_text))
+            }
         }
     }
 
@@ -66,7 +79,6 @@ private fun OperatorContent() {
     Text(text = stringResource(R.string.p_operator), style = MaterialTheme.typography.headlineSmall)
     Spacer(modifier = Modifier.height(8.dp))
     Text(stringResource(R.string.home_operator))
-
 }
 @Composable
 private fun ManagerContent() {
