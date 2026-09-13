@@ -21,4 +21,6 @@
     <string name="idea_description_text">Descrição detalhada</string>
     <string name="save_idea_text">Salvar Ideia</string>
     <string name="inovations_idea_text">Ideias de Inovação</string>
+    <string name="active_projects_text">Projetos em Andamento</string>
+    <string name="project_notfound_text">Projeto não encontrado</string>
 </resources>

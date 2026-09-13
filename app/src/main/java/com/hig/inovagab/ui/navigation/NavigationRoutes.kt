@@ -9,6 +9,7 @@ import com.hig.inovagab.model.UserRole
 import com.hig.inovagab.ui.screens.HomeScreen
 import com.hig.inovagab.ui.screens.IdeaScreen
 import com.hig.inovagab.ui.screens.LoginScreen
+import com.hig.inovagab.ui.screens.ProjectScreen
 
 @Composable
 fun NavigationRoutes(){
@@ -22,7 +23,9 @@ fun NavigationRoutes(){
             val role = UserRole.entries.find { it.name == roleArg } ?: UserRole.OPERATOR
             HomeScreen(role = role,
                 onLogout = { navController.navigate("login") {popUpTo(navController.graph.id) { inclusive = true } } },
-                onNavigateToIdeas = { navController.navigate("ideas/${role.name}") })
+                onNavigateToIdeas = { navController.navigate("ideas/${role.name}") },
+                onNavigateToProjects = { navController.navigate("projects/${role.name}") })
+
         }
         composable("ideas/{role}") { backStackEntry ->
             val roleString = backStackEntry.arguments?.getString("role") ?: UserRole.OPERATOR.name
@@ -34,6 +37,19 @@ fun NavigationRoutes(){
                 userId = userId,
                 onNavigateBack = { navController.popBackStack() }
             )
+        }
+
+        composable("projects/{role}") { backStackEntry ->
+            val roleString = backStackEntry.arguments?.getString("role") ?: UserRole.OPERATOR.name
+            val role = UserRole.valueOf(roleString)
+            val userId = "user123" //Provisório
+
+            ProjectScreen(
+                role = role,
+                userId = userId,
+                onNavigateBack = { navController.popBackStack() }
+            )
+
         }
 
 

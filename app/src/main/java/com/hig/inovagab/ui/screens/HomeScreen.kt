@@ -29,7 +29,7 @@ import com.hig.inovagab.model.UserRole
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Unit) {
+fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Unit, onNavigateToProjects: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,6 +69,16 @@ fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Un
                     .padding(top = 16.dp)
             ) {
                 Text(stringResource(R.string.inovations_idea_text))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onNavigateToProjects,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)){
+                Text("Projetos em andamento")
             }
         }
     }

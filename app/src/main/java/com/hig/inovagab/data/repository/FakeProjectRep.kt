@@ -15,13 +15,15 @@ class FakeProjectRep : ProjectRep {
             status = ProjectStatus.ACTIVE,
             investment = 45000.0,
             deadline = "2026-12-01",
-            financialReturn = 0.0
+            financialReturn = 0.0,
+            description = "Proposta de digitalização dos registros de checklist da frota"
         )
     )
 
     override suspend fun getAllProjects(): List<Project> {
         delay(300)
         return projects.toList()
+        //return emptyList()
     }
 
     override suspend fun createProject(project: Project): Project {
