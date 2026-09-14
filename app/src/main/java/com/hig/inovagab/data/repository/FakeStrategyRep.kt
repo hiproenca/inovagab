@@ -6,7 +6,14 @@ import java.util.UUID
 
 class FakeStrategyRep : StrategyRep {
     private val strategies = mutableListOf(
-        Strategy(id = "strategy-1", title = "Excelência operacional 2026", category = "Eficiência", campaign = "Operação Enxuta", date = "2026-01-15")
+        Strategy(
+            id = "strategy-1",
+            title = "Excelência operacional 2026",
+            category = "Eficiência",
+            campaign = "Operação Enxuta",
+            date = "2026-01-15",
+            description = "Estratégia de excelência operacional para o ano de 2026"
+        ),
     )
 
     override suspend fun getAllStrategies(): List<Strategy> {

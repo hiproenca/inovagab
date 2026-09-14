@@ -21,7 +21,8 @@ data class Strategy(
     val title: String,
     val category: String,
     val campaign: String,
-    val date: String
+    val date: String,
+    val description: String
 )
 
 data class Idea(

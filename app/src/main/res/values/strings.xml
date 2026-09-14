@@ -23,4 +23,8 @@
     <string name="inovations_idea_text">Ideias de Inovação</string>
     <string name="active_projects_text">Projetos em Andamento</string>
     <string name="project_notfound_text">Projeto não encontrado</string>
+    <string name="pending_strategies_text">Estrategias em andamento</string>
+    <string name="no_strategy_mapped_text">Nenhuma estratégia mapeada.</string>
+    <string name="ongoing_projects_text">Projetos em andamento</string>
+    <string name="ongoing_strategies_text">Estratégias em andamento</string>
 </resources>

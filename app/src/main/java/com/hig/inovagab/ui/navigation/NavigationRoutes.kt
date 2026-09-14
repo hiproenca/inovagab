@@ -10,6 +10,7 @@ import com.hig.inovagab.ui.screens.HomeScreen
 import com.hig.inovagab.ui.screens.IdeaScreen
 import com.hig.inovagab.ui.screens.LoginScreen
 import com.hig.inovagab.ui.screens.ProjectScreen
+import com.hig.inovagab.ui.screens.StrategyScreen
 
 @Composable
 fun NavigationRoutes(){
@@ -24,7 +25,10 @@ fun NavigationRoutes(){
             HomeScreen(role = role,
                 onLogout = { navController.navigate("login") {popUpTo(navController.graph.id) { inclusive = true } } },
                 onNavigateToIdeas = { navController.navigate("ideas/${role.name}") },
-                onNavigateToProjects = { navController.navigate("projects/${role.name}") })
+                onNavigateToProjects = { navController.navigate("projects/${role.name}") },
+                onNavigateToStrategies = { navController.navigate("strategies/${role.name}") }
+            )
+
 
         }
         composable("ideas/{role}") { backStackEntry ->
@@ -50,6 +54,18 @@ fun NavigationRoutes(){
                 onNavigateBack = { navController.popBackStack() }
             )
 
+        }
+
+        composable("strategies/{role}") { backStackEntry ->
+            val roleString = backStackEntry.arguments?.getString("role") ?: UserRole.OPERATOR.name
+            val role = UserRole.valueOf(roleString)
+            val userId = "user123"
+
+            StrategyScreen(
+                role = role,
+                userId = userId,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
 
