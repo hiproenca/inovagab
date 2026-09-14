@@ -16,7 +16,10 @@ class FakeProjectRep : ProjectRep {
             investment = 45000.0,
             deadline = "2026-12-01",
             financialReturn = 0.0,
-            description = "Proposta de digitalização dos registros de checklist da frota"
+            description = "Proposta de digitalização dos registros de checklist da frota",
+            strategyId = "strategy-1",
+            results = "Lorem Ipsum"
+
         )
     )
 

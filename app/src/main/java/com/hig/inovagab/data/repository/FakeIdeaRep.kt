@@ -7,8 +7,22 @@ import java.util.UUID
 
 class FakeIdeaRep : IdeaRep {
     private val ideas = mutableListOf(
-        Idea(id = "idea-1", title = "Reduzir tempo de conferência de carga", description = "Otimizar o checklist no pátio.", status = IdeaStatus.PENDING, authorId = "operator-current"),
-        Idea(id = "idea-2", title = "Checklist digital pro motorista", description = "Substituir o papel por formulário no app.", status = IdeaStatus.APPROVED, authorId = "operator-current")
+        Idea(
+            id = "idea-1",
+            title = "Reduzir tempo de conferência de carga",
+            description = "Otimizar o checklist no pátio.",
+            status = IdeaStatus.PENDING,
+            authorId = "operator-current",
+            strategyId = "strategy-1"
+        ),
+        Idea(
+            id = "idea-2",
+            title = "Checklist digital pro motorista",
+            description = "Substituir o papel por formulário no app.",
+            status = IdeaStatus.APPROVED,
+            authorId = "operator-current",
+            strategyId = "strategy-1"
+        )
     )
 
     override suspend fun getIdeasByAuthor(authorId: String): List<Idea> {

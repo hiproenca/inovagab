@@ -30,7 +30,8 @@ data class Idea(
     val title: String,
     val description: String,
     val status: IdeaStatus,
-    val authorId: String
+    val authorId: String,
+    val strategyId: String? = null
 )
 
 data class Project(
@@ -41,6 +42,8 @@ data class Project(
     val investment: Double,
     val deadline: String,
     val financialReturn: Double,
-    val description: String
+    val description: String,
+    val strategyId: String? = null,
+    val results: String? = null
 )
 
