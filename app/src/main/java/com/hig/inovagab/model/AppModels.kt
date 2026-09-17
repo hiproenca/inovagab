@@ -18,6 +18,7 @@ data class User(
 
 data class Strategy(
     val id: String?,
+    val leaderId: String,
     val title: String,
     val category: String,
     val campaign: String,
@@ -36,6 +37,7 @@ data class Idea(
 
 data class Project(
     val id: String?,
+    val managerId: String,
     val title: String,
     val stage: ProjectStage,
     val status: ProjectStatus,
