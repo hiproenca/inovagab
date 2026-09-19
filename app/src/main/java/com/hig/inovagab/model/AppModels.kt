@@ -1,10 +1,9 @@
 package com.hig.inovagab.model
 
-enum class UserRole{ OPERATOR, MANAGER, LEADER }
-enum class IdeaStatus{PENDING, APPROVED, REJECTED}
-enum class ProjectStage{PLANNING, EXECUTION, COMPLETED}
-enum class ProjectStatus {ACTIVE, ON_HOLD, CANCELLED}
-
+import com.hig.inovagab.data.utils.IdeaStatus
+import com.hig.inovagab.data.utils.ProjectStage
+import com.hig.inovagab.data.utils.ProjectStatus
+import com.hig.inovagab.data.utils.UserRole
 
 
 data class User(
