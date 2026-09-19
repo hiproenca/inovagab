@@ -6,17 +6,49 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
 interface AguiaBrancaApi {
-    @POST("api/auth/login")
-    suspend fun login(@Body request: LoginRequest): LoginResponse
+    //@POST("api/auth/login")
+   // suspend fun login(@Body request: LoginRequest): LoginResponse
 
-    @GET("api/strategies")
-    suspend fun getStrategies(@Header("Authorization") token: String): List<Strategy>
+    //@POST("api/auth/register")
+    //suspend fun register(@Body request: DtoRegisterRequest): DtoAuthenticationResponse
 
-    @GET("api/ideas")
-    suspend fun getIdeas(@Header("Authorization") token: String): List<Idea>
+    //@POST("api/ideas")
+    //suspend fun createIdea(@Body request: DtoIdeaRequest): Idea
 
-    @GET("api/projects")
-    suspend fun getProjects(@Header("Authorization") token: String): List<Project>
+    //@POST("api/projects")
+    //suspend fun createProject(@Body request: DtoProjectRequest): Project
+
+    //@GET("api/strategies")
+    //suspend fun getStrategies(@Header("Authorization") token: String): List<Strategy>
+
+    //@GET("api/ideas")
+    //suspend fun getIdeas(@Header("Authorization") token: String): List<Idea>
+
+    //@GET("api/projects")
+    //suspend fun getProjects(@Header("Authorization") token: String): List<Project>
+
+    //@GET("api/dashboard")
+    //suspend fun getDashboardSummary(): DtoDashboardResponse // Mapear o DTO correspondente
+
+    //@GET("api/dashboard/insights")
+    //suspend fun getDashboardInsights(): InsightsResponse // Onde a IA do Gemini atua
+
+    //@PUT("api/ideas/{id}/status")
+    //suspend fun updateIdeaStatus(@Path("id") id: Long, @Body status: StatusRequest): Idea
+
+    //@DELETE("api/ideas/{id}")
+    //suspend fun deleteIdea(@Path("id") id: Long)
+
+    //@DELETE("api/projects/{id}")
+    //suspend fun deleteProject(@Path("id") id: Long)
+
+    //@DELETE("api/strategies/{id}")
+    //suspend fun deleteStrategy(@Path("id") id: Long)
+
+
+
+
+
 }
 
 object RetrofitClient {

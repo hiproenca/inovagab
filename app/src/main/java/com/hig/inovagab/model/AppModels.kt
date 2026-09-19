@@ -6,8 +6,6 @@ enum class ProjectStage{PLANNING, EXECUTION, COMPLETED}
 enum class ProjectStatus {ACTIVE, ON_HOLD, CANCELLED}
 
 
-data class LoginRequest(val email: String, val password: String)
-data class LoginResponse(val token: String, val user: User)
 
 data class User(
     val id: String?,
