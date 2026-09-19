@@ -8,14 +8,20 @@ import okhttp3.Response
 
 class AuthInterceptor (private val sessionManager: SessionManager): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val requestBuilder = chain.request().newBuilder()
-        val token = runBlocking { sessionManager.jwtToken.first() }
+        val request = chain.request()
+        val requestBuilder = request.newBuilder()
 
-        if(!token.isNullOrEmpty()){
-            requestBuilder.addHeader("Authorization", "Bearer $token")
+        if(!request.url.toString().contains("/api/auth/")){
+            val token = runBlocking {sessionManager.jwtToken.first()}
 
+            if(!token.isNullOrEmpty()){
+                requestBuilder.addHeader("Authorization", "Bearer $token")
+            }
         }
-        return chain.proceed(requestBuilder.build())
+        val response = chain.proceed(requestBuilder.build())
+
+        if(response.code == 401){runBlocking { sessionManager.clearSession() }}
+        return response
     }
 
 }

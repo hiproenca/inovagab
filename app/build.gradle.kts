@@ -20,9 +20,12 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
+
     }
 
     buildTypes {
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -68,6 +71,9 @@ dependencies {
 
     implementation(libs.androidx.ui.tooling.preview)
     debugImplementation(libs.androidx.ui.tooling)
+
+    //Interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
 
 }
