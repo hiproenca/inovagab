@@ -40,7 +40,7 @@ data class Project(
     val status: ProjectStatus,
     val investment: Double,
     val deadline: String,
-    val financialReturn: Double,
+    val financialReturn: Double? = null,
     val description: String,
     val strategyId: String? = null,
     val results: String? = null

@@ -63,37 +63,45 @@ fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Un
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Button(
-                onClick = onNavigateToIdeas,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text(stringResource(R.string.inovations_idea_text))
+            val canSeeIdeas = role == UserRole.OPERATOR || role == UserRole.MANAGER
+            val canSeeProjects = role == UserRole.MANAGER || role == UserRole.LEADER
+
+            if (canSeeIdeas) {
+                Button(
+                    onClick = onNavigateToIdeas,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text(stringResource(R.string.inovations_idea_text))
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = onNavigateToProjects,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)){
-                Text(stringResource(R.string.ongoing_projects_text))
+            if (canSeeProjects) {
+                Button(
+                    onClick = onNavigateToProjects,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text(stringResource(R.string.ongoing_projects_text))
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = onNavigateToStrategies,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)){
+                    .padding(top = 16.dp)
+            ) {
                 Text(stringResource(R.string.ongoing_strategies_text))
             }
-        }
-    }
 
+        }
+
+    }
 }
 @Composable
 private fun OperatorContent() {
