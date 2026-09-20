@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.hig.inovagab.data.repository.RepProvider
 import com.hig.inovagab.ui.navigation.NavigationRoutes
 import com.hig.inovagab.ui.theme.InovaGabTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        RepProvider.init(applicationContext)
         setContent {
             InovaGabTheme {
                 Surface(

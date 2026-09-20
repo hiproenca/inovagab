@@ -14,14 +14,17 @@ class SessionManager(private val context: Context) {
     companion object {
         private val JWT_TOKEN_KEY = stringPreferencesKey("jwt_token")
         private val USER_ROLE_KEY = stringPreferencesKey("user_role")
+        private val USER_ID_KEY = stringPreferencesKey("user_id")
     }
     val jwtToken: Flow<String?> = context.dataStore.data.map{it[JWT_TOKEN_KEY]}
     val userRole: Flow<String?> = context.dataStore.data.map{it[USER_ROLE_KEY]}
+    val userId: Flow<String?> = context.dataStore.data.map { it[USER_ID_KEY] }
 
-    suspend fun saveSession(token: String, role: String) {
+    suspend fun saveSession(token: String, role: String, userId: String) {
         context.dataStore.edit { prefs ->
             prefs[JWT_TOKEN_KEY] = token
             prefs[USER_ROLE_KEY] = role
+            prefs[USER_ID_KEY] = userId
         }
     }
 

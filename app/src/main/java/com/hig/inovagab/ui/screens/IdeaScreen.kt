@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hig.inovagab.R
-import com.hig.inovagab.model.UserRole
+import com.hig.inovagab.data.utils.UserRole
 import com.hig.inovagab.ui.viewmodel.IdeaUiState
 import com.hig.inovagab.ui.viewmodel.IdeaViewModel
 

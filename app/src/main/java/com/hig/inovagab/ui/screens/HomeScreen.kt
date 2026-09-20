@@ -23,7 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hig.inovagab.R
-import com.hig.inovagab.model.UserRole
+import com.hig.inovagab.data.utils.UserRole
+
 
 
 

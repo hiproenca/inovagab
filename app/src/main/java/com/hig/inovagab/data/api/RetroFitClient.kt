@@ -1,63 +1,55 @@
 package com.hig.inovagab.data.api
 
-import com.hig.inovagab.model.*
+import android.content.Context
+import com.hig.inovagab.BuildConfig
+import com.hig.inovagab.data.local.SessionManager
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.*
-
-interface AguiaBrancaApi {
-    //@POST("api/auth/login")
-   // suspend fun login(@Body request: LoginRequest): LoginResponse
-
-    //@POST("api/auth/register")
-    //suspend fun register(@Body request: DtoRegisterRequest): DtoAuthenticationResponse
-
-    //@POST("api/ideas")
-    //suspend fun createIdea(@Body request: DtoIdeaRequest): Idea
-
-    //@POST("api/projects")
-    //suspend fun createProject(@Body request: DtoProjectRequest): Project
-
-    //@GET("api/strategies")
-    //suspend fun getStrategies(@Header("Authorization") token: String): List<Strategy>
-
-    //@GET("api/ideas")
-    //suspend fun getIdeas(@Header("Authorization") token: String): List<Idea>
-
-    //@GET("api/projects")
-    //suspend fun getProjects(@Header("Authorization") token: String): List<Project>
-
-    //@GET("api/dashboard")
-    //suspend fun getDashboardSummary(): DtoDashboardResponse // Mapear o DTO correspondente
-
-    //@GET("api/dashboard/insights")
-    //suspend fun getDashboardInsights(): InsightsResponse // Onde a IA do Gemini atua
-
-    //@PUT("api/ideas/{id}/status")
-    //suspend fun updateIdeaStatus(@Path("id") id: Long, @Body status: StatusRequest): Idea
-
-    //@DELETE("api/ideas/{id}")
-    //suspend fun deleteIdea(@Path("id") id: Long)
-
-    //@DELETE("api/projects/{id}")
-    //suspend fun deleteProject(@Path("id") id: Long)
-
-    //@DELETE("api/strategies/{id}")
-    //suspend fun deleteStrategy(@Path("id") id: Long)
-
-
-
-
-
-}
+import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     private const val BASE_URL = "http://10.0.2.2:8080/"
 
-    val api: AguiaBrancaApi by lazy {
-        Retrofit.Builder()
+    @Volatile
+    private var instance: AguiaBrancaApi? = null
+
+    fun getApi(context: Context): AguiaBrancaApi {
+        val appContext = context.applicationContext
+
+        return instance ?: synchronized(this) {
+            instance ?: buildApi(appContext).also { instance = it }
+        }
+    }
+
+    private fun buildApi(appContext: Context): AguiaBrancaApi {
+        val sessionManager = SessionManager(appContext)
+        val authInterceptor = AuthInterceptor(sessionManager)
+
+        // Adiciona log das requisições apenas no modo de desenvolvimento (Debug)
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+        }
+
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(authInterceptor)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .build()
+
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
+        return Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(AguiaBrancaApi::class.java)
     }

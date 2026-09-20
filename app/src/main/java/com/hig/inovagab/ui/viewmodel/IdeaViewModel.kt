@@ -2,11 +2,14 @@ package com.hig.inovagab.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hig.inovagab.data.dto.DtoCreateIdeaRequest
+import com.hig.inovagab.data.dto.DtoUpdateIdeaStatusRequest
+import com.hig.inovagab.data.repository.ApiResult
 import com.hig.inovagab.data.repository.IdeaRep
 import com.hig.inovagab.data.repository.RepProvider
+import com.hig.inovagab.data.utils.IdeaStatus
+import com.hig.inovagab.data.utils.UserRole
 import com.hig.inovagab.model.Idea
-import com.hig.inovagab.model.IdeaStatus
-import com.hig.inovagab.model.UserRole
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +21,7 @@ sealed class IdeaUiState {
     data class Error(val message: String) : IdeaUiState()
 }
 
-class IdeaViewModel (private val rep: IdeaRep = RepProvider.ideaRepository): ViewModel() {
+class IdeaViewModel(private val rep: IdeaRep = RepProvider.ideaRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow<IdeaUiState>(IdeaUiState.Loading)
     val uiState: StateFlow<IdeaUiState> = _uiState.asStateFlow()
@@ -26,48 +29,63 @@ class IdeaViewModel (private val rep: IdeaRep = RepProvider.ideaRepository): Vie
     fun loadIdeas(role: UserRole, userId: String) {
         viewModelScope.launch {
             _uiState.value = IdeaUiState.Loading
-            try {
-                val ideas = if (role == UserRole.OPERATOR) {
-                    rep.getIdeasByAuthor(userId)
-                } else {
-                    rep.getAllIdeas()
+            when (val result = rep.getIdeas()) {
+                is ApiResult.Success -> {
+                    val ideas = if (role == UserRole.OPERATOR) {
+                        result.data.filter { it.authorId == userId }
+                    } else {
+                        result.data
+                    }
+                    _uiState.value = IdeaUiState.Success(ideas)
                 }
-                _uiState.value = IdeaUiState.Success(ideas)
-            } catch (e: Exception) {
-                _uiState.value = IdeaUiState.Error(
-                    e.message ?: "Erro ao carregar as suas ideias, tente novamente mais tarde"
-                )
+                is ApiResult.Error -> {
+                    _uiState.value = IdeaUiState.Error(result.exception)
+                }
             }
         }
     }
 
-    fun submitIdeas(title: String, description: String, authorId: String, role: UserRole){
+    fun submitIdeas(title: String, description: String, authorId: String, role: UserRole,  strategyId: String? = null) {
         viewModelScope.launch {
-            try{
-                val newIdea = Idea(
-                    id = null,
-                    title = title,
-                    description = description,
-                    status = IdeaStatus.PENDING,
-                    authorId = authorId
-                )
-                rep.createIdea(newIdea)
-                loadIdeas(role, authorId)
-            } catch (e: Exception) {
-                _uiState.value = IdeaUiState.Error("Falha ao criar ideia: ${e.message}")
-            }
-        }
-    } // A chave do submitIdeas fecha AQUI.
+            val request = DtoCreateIdeaRequest(
+                title = title,
+                description = description,
+                authorId = authorId,
+                strategyId = strategyId
+            )
 
-    // Agora o updateIdeaStatus é uma função independente
-    fun updateIdeaStatus(ideaId: String, newStatus: IdeaStatus, role: UserRole, userId: String){
-        viewModelScope.launch {
-            try{
-                rep.updateIdeaStatus(ideaId, newStatus)
-                loadIdeas(role, userId) // Corrigido de authorId para userId
-            } catch (e: Exception){
-                _uiState.value = IdeaUiState.Error("Falha ao atualizar status da ideia: ${e.message}")
+            when (val result = rep.createIdea(request)) {
+                is ApiResult.Success -> loadIdeas(role, authorId)
+                is ApiResult.Error -> {
+                    _uiState.value = IdeaUiState.Error("Falha ao criar ideia: ${result.exception}")
+                }
             }
         }
     }
+
+    fun updateIdeaStatus(ideaId: String, newStatus: IdeaStatus, role: UserRole, userId: String) {
+        viewModelScope.launch {
+            when (val result = rep.updateIdeaStatus(ideaId, DtoUpdateIdeaStatusRequest(newStatus))) {
+                is ApiResult.Success -> loadIdeas(role, userId)
+                is ApiResult.Error -> {
+                    _uiState.value = IdeaUiState.Error("Falha ao atualizar status da ideia: ${result.exception}")
+                }
+            }
+        }
+    }
+
+
+    fun deleteIdea(ideaId: String, role: UserRole, userId: String) {
+        viewModelScope.launch {
+            when (val result = rep.deleteIdea(ideaId)) {
+                is ApiResult.Success -> loadIdeas(role, userId)
+                is ApiResult.Error -> {
+                    _uiState.value = IdeaUiState.Error("Falha ao excluir ideia: ${result.exception}")
+                }
+            }
+        }
+    }
+
+
+
 }

@@ -2,10 +2,12 @@ package com.hig.inovagab.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hig.inovagab.data.dto.DtoCreateStrategyRequest
+import com.hig.inovagab.data.repository.ApiResult
 import com.hig.inovagab.data.repository.RepProvider
 import com.hig.inovagab.data.repository.StrategyRep
+import com.hig.inovagab.data.utils.UserRole
 import com.hig.inovagab.model.Strategy
-import com.hig.inovagab.model.UserRole
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,23 +19,92 @@ sealed class StrategyUiState {
     data class Error(val message: String) : StrategyUiState()
 }
 
-class StrategyViewModel(private val rep: StrategyRep = RepProvider.strategyRepository) :
-    ViewModel() {
+class StrategyViewModel(
+    private val rep: StrategyRep = RepProvider.strategyRepository
+) : ViewModel() {
+
     private val _uiState = MutableStateFlow<StrategyUiState>(StrategyUiState.Loading)
     val uiState: StateFlow<StrategyUiState> = _uiState.asStateFlow()
 
     fun loadStrategies(role: UserRole, userId: String) {
         viewModelScope.launch {
             _uiState.value = StrategyUiState.Loading
-            try {
-                val strategies = rep.getAllStrategies()
-                _uiState.value = StrategyUiState.Success(strategies)
-            } catch (e: Exception) {
-                _uiState.value = StrategyUiState.Error(
-                    e.message ?: "Erro ao carregar as estratégias."
-                )
+            when (val result = rep.getStrategies()) {
+                is ApiResult.Success -> {
+                    _uiState.value = StrategyUiState.Success(result.data)
+                }
+                is ApiResult.Error -> {
+                    _uiState.value = StrategyUiState.Error(result.exception)
+                }
             }
         }
     }
 
+    fun createStrategy(
+        title: String,
+        leaderId: String,
+        category: String,
+        campaign: String,
+        date: String,
+        description: String,
+        role: UserRole,
+        userId: String
+    ) {
+        viewModelScope.launch {
+            val request = DtoCreateStrategyRequest(
+                title = title,
+                leaderId = leaderId,
+                category = category,
+                campaign = campaign,
+                date = date,
+                description = description
+            )
+            when (val result = rep.createStrategy(request)) {
+                is ApiResult.Success -> loadStrategies(role, userId)
+                is ApiResult.Error -> {
+                    _uiState.value = StrategyUiState.Error("Falha ao criar estratégia: ${result.exception}")
+                }
+            }
+        }
+    }
+
+    fun updateStrategy(
+        strategyId: String,
+        title: String,
+        leaderId: String,
+        category: String,
+        campaign: String,
+        date: String,
+        description: String,
+        role: UserRole,
+        userId: String
+    ) {
+        viewModelScope.launch {
+            val request = DtoCreateStrategyRequest(
+                title = title,
+                leaderId = leaderId,
+                category = category,
+                campaign = campaign,
+                date = date,
+                description = description
+            )
+            when (val result = rep.updateStrategy(strategyId, request)) {
+                is ApiResult.Success -> loadStrategies(role, userId)
+                is ApiResult.Error -> {
+                    _uiState.value = StrategyUiState.Error("Falha ao atualizar estratégia: ${result.exception}")
+                }
+            }
+        }
+    }
+
+    fun deleteStrategy(strategyId: String, role: UserRole, userId: String) {
+        viewModelScope.launch {
+            when (val result = rep.deleteStrategy(strategyId)) {
+                is ApiResult.Success -> loadStrategies(role, userId)
+                is ApiResult.Error -> {
+                    _uiState.value = StrategyUiState.Error("Falha ao excluir estratégia: ${result.exception}")
+                }
+            }
+        }
+    }
 }
