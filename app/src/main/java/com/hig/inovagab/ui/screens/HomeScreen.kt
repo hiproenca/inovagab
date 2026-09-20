@@ -30,7 +30,7 @@ import com.hig.inovagab.data.utils.UserRole
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Unit, onNavigateToProjects: () -> Unit, onNavigateToStrategies: () -> Unit) {
+fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Unit, onNavigateToProjects: () -> Unit, onNavigateToStrategies: () -> Unit, onNavigateToDashboard: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -98,6 +98,19 @@ fun HomeScreen(role: UserRole, onLogout: () -> Unit, onNavigateToIdeas: () -> Un
             ) {
                 Text(stringResource(R.string.ongoing_strategies_text))
             }
+
+            if (role == UserRole.LEADER) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = onNavigateToDashboard,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text("Dashboard e insights")
+                }
+            }
+
 
         }
 

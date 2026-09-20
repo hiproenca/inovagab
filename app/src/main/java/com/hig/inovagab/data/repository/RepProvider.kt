@@ -20,4 +20,5 @@ object RepProvider {
         val ideaRepository: IdeaRep by lazy { IdeaRepImpl(api) }
         val projectRepository: ProjectRep by lazy { ProjectRepImpl(api) }
         val strategyRepository: StrategyRep by lazy { StrategyRepImpl(api) }
+        val dashboardRepository: DashboardRep by lazy { DashboardRepImpl(api) }
 }

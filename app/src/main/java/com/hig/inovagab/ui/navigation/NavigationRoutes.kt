@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hig.inovagab.data.local.SessionManager
 import com.hig.inovagab.data.utils.UserRole
+import com.hig.inovagab.ui.screens.DashboardScreen
 import com.hig.inovagab.ui.screens.HomeScreen
 import com.hig.inovagab.ui.screens.IdeaScreen
 import com.hig.inovagab.ui.screens.LoginScreen
@@ -55,7 +56,8 @@ fun NavigationRoutes() {
                 },
                 onNavigateToIdeas = { navController.navigate("ideas/${role.name}/$userId") },
                 onNavigateToProjects = { navController.navigate("projects/${role.name}/$userId") },
-                onNavigateToStrategies = { navController.navigate("strategies/${role.name}/$userId") }
+                onNavigateToStrategies = { navController.navigate("strategies/${role.name}/$userId") },
+                onNavigateToDashboard = { navController.navigate("dashboard") }
             )
         }
 
@@ -81,6 +83,10 @@ fun NavigationRoutes() {
                 userId = backStackEntry.userIdArg(),
                 onNavigateBack = { navController.popBackStack() }
             )
+        }
+
+        composable("dashboard") {
+            DashboardScreen(onNavigateBack = { navController.popBackStack() })
         }
     }
 }

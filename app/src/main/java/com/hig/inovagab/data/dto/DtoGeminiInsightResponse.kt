@@ -1,3 +1,5 @@
 package com.hig.inovagab.data.dto
 
-data class DtoGeminiInsightResponse(val insight: String)
+import com.squareup.moshi.Json
+
+data class DtoGeminiInsightResponse(@Json(name = "aiInsight") val insight: String)
