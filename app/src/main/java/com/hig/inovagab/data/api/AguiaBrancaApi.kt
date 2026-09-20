@@ -8,8 +8,6 @@ import com.hig.inovagab.data.dto.DtoCreateStrategyRequest
 import com.hig.inovagab.data.dto.DtoDashboardResponse
 import com.hig.inovagab.data.dto.DtoGeminiInsightResponse
 import com.hig.inovagab.data.dto.DtoRegisterRequest
-import com.hig.inovagab.data.dto.DtoUpdateIdeaStatusRequest
-import com.hig.inovagab.data.dto.DtoUpdateProjectProgressRequest
 import com.hig.inovagab.model.Idea
 import com.hig.inovagab.model.Project
 import com.hig.inovagab.model.Strategy
@@ -38,11 +36,14 @@ interface AguiaBrancaApi {
     @GET("api/ideas")
     suspend fun getIdeas(): List<Idea>
 
+    @GET("api/ideas/my-ideas")
+    suspend fun getMyIdeas(): List<Idea>
+
     @POST("api/ideas")
     suspend fun createIdea(@Body request: DtoCreateIdeaRequest): Idea
 
-    @PUT("api/ideas/{id}/status")
-    suspend fun updateIdeaStatus(@Path("id") id: String, @Body request: DtoUpdateIdeaStatusRequest): Idea
+    @PUT("api/ideas/{id}")
+    suspend fun updateIdea(@Path("id") id: String, @Body idea: Idea): Idea
 
     @DELETE("api/ideas/{id}")
     suspend fun deleteIdea(@Path("id") id: String)
@@ -54,8 +55,8 @@ interface AguiaBrancaApi {
     @POST("api/projects")
     suspend fun createProject(@Body request: DtoCreateProjectRequest): Project
 
-    @PUT("api/projects/{id}/progress")
-    suspend fun updateProjectProgress(@Path("id") id: String, @Body request: DtoUpdateProjectProgressRequest): Project
+    @PUT("api/projects/{id}")
+    suspend fun updateProject(@Path("id") id: String, @Body project: Project): Project
 
     @DELETE("api/projects/{id}")
     suspend fun deleteProject(@Path("id") id: String)

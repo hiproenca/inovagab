@@ -3,7 +3,6 @@ package com.hig.inovagab.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hig.inovagab.data.dto.DtoCreateProjectRequest
-import com.hig.inovagab.data.dto.DtoUpdateProjectProgressRequest
 import com.hig.inovagab.data.repository.ApiResult
 import com.hig.inovagab.data.repository.ProjectRep
 import com.hig.inovagab.data.repository.RepProvider
@@ -77,15 +76,19 @@ class ProjectViewModel(
         status: ProjectStatus,
         results: String?,
         role: UserRole,
-        userId: String
+        userId: String,
+        financialReturn: Double? = null
     ) {
+        val current = (_uiState.value as? ProjectUiState.Success)?.projects?.find { it.id == projectId }
+            ?: return
+        val updated = current.copy(
+            stage = stage,
+            status = status,
+            results = results,
+            financialReturn = financialReturn ?: current.financialReturn
+        )
         viewModelScope.launch {
-            val request = DtoUpdateProjectProgressRequest(
-                stage = stage,
-                status = status,
-                results = results
-            )
-            when (val result = rep.updateProjectProgress(projectId, request)) {
+            when (val result = rep.updateProject(projectId, updated)) {
                 is ApiResult.Success -> loadProjects(role, userId)
                 is ApiResult.Error -> {
                     _uiState.value = ProjectUiState.Error("Falha ao atualizar projeto: ${result.exception}")

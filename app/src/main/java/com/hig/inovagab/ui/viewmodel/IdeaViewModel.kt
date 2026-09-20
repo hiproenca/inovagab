@@ -3,7 +3,6 @@ package com.hig.inovagab.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hig.inovagab.data.dto.DtoCreateIdeaRequest
-import com.hig.inovagab.data.dto.DtoUpdateIdeaStatusRequest
 import com.hig.inovagab.data.repository.ApiResult
 import com.hig.inovagab.data.repository.IdeaRep
 import com.hig.inovagab.data.repository.RepProvider
@@ -29,14 +28,10 @@ class IdeaViewModel(private val rep: IdeaRep = RepProvider.ideaRepository) : Vie
     fun loadIdeas(role: UserRole, userId: String) {
         viewModelScope.launch {
             _uiState.value = IdeaUiState.Loading
-            when (val result = rep.getIdeas()) {
+            val result = if (role == UserRole.OPERATOR) rep.getMyIdeas() else rep.getIdeas()
+            when (result) {
                 is ApiResult.Success -> {
-                    val ideas = if (role == UserRole.OPERATOR) {
-                        result.data.filter { it.authorId == userId }
-                    } else {
-                        result.data
-                    }
-                    _uiState.value = IdeaUiState.Success(ideas)
+                    _uiState.value = IdeaUiState.Success(result.data)
                 }
                 is ApiResult.Error -> {
                     _uiState.value = IdeaUiState.Error(result.exception)
@@ -64,8 +59,10 @@ class IdeaViewModel(private val rep: IdeaRep = RepProvider.ideaRepository) : Vie
     }
 
     fun updateIdeaStatus(ideaId: String, newStatus: IdeaStatus, role: UserRole, userId: String) {
+        val current = (_uiState.value as? IdeaUiState.Success)?.ideas?.find { it.id == ideaId }
+            ?: return
         viewModelScope.launch {
-            when (val result = rep.updateIdeaStatus(ideaId, DtoUpdateIdeaStatusRequest(newStatus))) {
+            when (val result = rep.updateIdea(ideaId, current.copy(status = newStatus))) {
                 is ApiResult.Success -> loadIdeas(role, userId)
                 is ApiResult.Error -> {
                     _uiState.value = IdeaUiState.Error("Falha ao atualizar status da ideia: ${result.exception}")
