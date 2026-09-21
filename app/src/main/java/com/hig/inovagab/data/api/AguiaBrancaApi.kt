@@ -11,6 +11,7 @@ import com.hig.inovagab.data.dto.DtoRegisterRequest
 import com.hig.inovagab.model.Idea
 import com.hig.inovagab.model.Project
 import com.hig.inovagab.model.Strategy
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -59,7 +60,7 @@ interface AguiaBrancaApi {
     suspend fun updateProject(@Path("id") id: String, @Body project: Project): Project
 
     @DELETE("api/projects/{id}")
-    suspend fun deleteProject(@Path("id") id: String)
+    suspend fun deleteProject(@Path("id") id: String): Response<Unit>
 
     // --- STRATEGIES ---
     @GET("api/strategies")
@@ -72,6 +73,6 @@ interface AguiaBrancaApi {
     suspend fun updateStrategy(@Path("id") id: String, @Body request: DtoCreateStrategyRequest): Strategy
 
     @DELETE("api/strategies/{id}")
-    suspend fun deleteStrategy(@Path("id") id: String)
+    suspend fun deleteStrategy(@Path("id") id: String): Response<Unit>
 
 }

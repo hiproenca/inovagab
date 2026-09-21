@@ -16,5 +16,5 @@ class StrategyRepImpl(private val api : AguiaBrancaApi): StrategyRep {
         execute { api.updateStrategy(id, request) }
 
     override suspend fun deleteStrategy(id: String): ApiResult<Unit> =
-        execute { api.deleteStrategy(id) }
+        execute { api.deleteStrategy(id); Unit}
 }

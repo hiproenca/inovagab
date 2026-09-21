@@ -17,5 +17,5 @@ class ProjectRepImpl(private val api: AguiaBrancaApi) : ProjectRep {
         execute { api.updateProject(id, project) }
 
     override suspend fun deleteProject(id: String): ApiResult<Unit> =
-        execute { api.deleteProject(id) }
+        execute { api.deleteProject(id); Unit }
 }
