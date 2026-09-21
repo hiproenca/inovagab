@@ -29,7 +29,7 @@ object RetrofitClient {
         val sessionManager = SessionManager(appContext)
         val authInterceptor = AuthInterceptor(sessionManager)
 
-        // Adiciona log das requisições apenas no modo de desenvolvimento (Debug)
+        //Apenas debug
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }

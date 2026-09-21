@@ -31,6 +31,8 @@ import com.hig.inovagab.R
 import com.hig.inovagab.data.utils.UserRole
 import com.hig.inovagab.ui.viewmodel.IdeaUiState
 import com.hig.inovagab.ui.viewmodel.IdeaViewModel
+import com.hig.inovagab.ui.viewmodel.StrategyUiState
+import com.hig.inovagab.ui.viewmodel.StrategyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,13 +40,17 @@ fun IdeaScreen(
     role: UserRole,
     userId: String,
     onNavigateBack: () -> Unit,
-    viewModel: IdeaViewModel = viewModel()
+    viewModel: IdeaViewModel = viewModel(),
+    strategyViewModel: StrategyViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    val strategyState by strategyViewModel.uiState.collectAsState()
+    val strategies = (strategyState as? StrategyUiState.Success)?.strategies ?: emptyList()
 
     LaunchedEffect(Unit) {
         viewModel.loadIdeas(role, userId)
+        if (role == UserRole.OPERATOR) strategyViewModel.loadStrategies(role, userId)
     }
 
     Scaffold(
@@ -105,9 +111,10 @@ fun IdeaScreen(
                     } else {
 
                         IdeaFormContent(
-                            onSubmit = { title, description ->
-                                viewModel.submitIdeas(title, description, userId, role)
-                                selectedTabIndex = 0 //Volta para a lista
+                            strategies = strategies,
+                            onSubmit = { title, description, strategyId ->
+                                viewModel.submitIdeas(title, description, userId, role, strategyId)
+                                selectedTabIndex = 0 // Volta para a lista
                             }
                         )
                     }

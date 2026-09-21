@@ -33,6 +33,9 @@ import com.hig.inovagab.R
 import com.hig.inovagab.data.utils.IdeaStatus
 import com.hig.inovagab.data.utils.UserRole
 import com.hig.inovagab.model.Idea
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import com.hig.inovagab.model.Strategy
 
 @Composable
 fun IdeaListContent(
@@ -104,14 +107,17 @@ fun IdeaCard(
 
 @Composable
 fun IdeaFormContent(
-    onSubmit: (title: String, description: String) -> Unit
+    strategies: List<Strategy> = emptyList(),
+    onSubmit: (title: String, description: String, strategyId: String?) -> Unit
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var strategyId by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -131,13 +137,23 @@ fun IdeaFormContent(
             minLines = 4
         )
 
+        if (strategies.isNotEmpty()) {
+            Text("Estratégia vinculada (opcional)", style = MaterialTheme.typography.labelLarge)
+            OptionRow(label = "Nenhuma", selected = strategyId == null) { strategyId = null }
+            strategies.forEach { strategy ->
+                OptionRow(label = strategy.title, selected = strategyId == strategy.id) {
+                    strategyId = strategy.id
+                }
+            }
+        }
+
         Button(
             onClick = {
                 if (title.isNotBlank() && description.isNotBlank()) {
-                    onSubmit(title, description)
-
+                    onSubmit(title, description, strategyId)
                     title = ""
                     description = ""
+                    strategyId = null
                 }
             },
             modifier = Modifier.fillMaxWidth()

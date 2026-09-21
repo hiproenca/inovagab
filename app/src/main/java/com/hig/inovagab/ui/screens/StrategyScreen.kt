@@ -75,7 +75,17 @@ fun StrategyScreen(
                 }
 
                 is StrategyUiState.Success -> {
-                    StrategyListContent(strategies = state.strategies)
+                    StrategyListContent(
+                        strategies = state.strategies,
+                        role = role,
+                        onCreate = { title, category, campaign, date, description ->
+                            viewModel.createStrategy(title, userId, category, campaign, date, description, role, userId)
+                        },
+                        onUpdate = { id, title, category, campaign, date, description ->
+                            viewModel.updateStrategy(id, title, userId, category, campaign, date, description, role, userId)
+                        },
+                        onDelete = { id -> viewModel.deleteStrategy(id, role, userId) }
+                    )
                 }
             }
         }

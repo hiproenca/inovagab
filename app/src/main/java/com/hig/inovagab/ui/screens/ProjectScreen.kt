@@ -10,6 +10,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -20,12 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hig.inovagab.R
 import com.hig.inovagab.data.utils.UserRole
 import com.hig.inovagab.ui.viewmodel.ProjectUiState
 import com.hig.inovagab.ui.viewmodel.ProjectViewModel
+import com.hig.inovagab.ui.viewmodel.StrategyUiState
+import com.hig.inovagab.ui.viewmodel.StrategyViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,10 +35,17 @@ fun ProjectScreen(
     role: UserRole,
     userId: String,
     onNavigateBack: () -> Unit,
-    viewModel: ProjectViewModel = viewModel()) {
+    viewModel: ProjectViewModel = viewModel(),
+    strategyViewModel: StrategyViewModel = viewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
+    val strategyState by strategyViewModel.uiState.collectAsState()
+    val strategies = (strategyState as? StrategyUiState.Success)?.strategies ?: emptyList()
 
-    LaunchedEffect(Unit) { viewModel.loadProjects(role, userId) }
+    LaunchedEffect(Unit) {
+        viewModel.loadProjects(role, userId)
+        strategyViewModel.loadStrategies(role, userId)
+    }
 
     Scaffold(
         topBar = {
@@ -50,13 +59,11 @@ fun ProjectScreen(
                         )
                     }
                 }
-
-
             )
         }
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-            when (val state = uiState){
+            when (val state = uiState) {
                 is ProjectUiState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
@@ -64,25 +71,24 @@ fun ProjectScreen(
                 }
                 is ProjectUiState.Error -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = state.message, color = androidx.compose.material3.MaterialTheme.colorScheme.error)
+                        Text(text = state.message, color = MaterialTheme.colorScheme.error)
                     }
                 }
                 is ProjectUiState.Success -> {
-                    ProjectListContent(projects = state.projects)
+                    ProjectListContent(
+                        projects = state.projects,
+                        role = role,
+                        strategies = strategies,
+                        onCreate = { title, investment, deadline, description, strategyId ->
+                            viewModel.createProject(title, userId, investment, deadline, description, role, userId, strategyId)
+                        },
+                        onUpdateProgress = { id, stage, status, results, financialReturn ->
+                            viewModel.updateProjectProgress(id, stage, status, results, role, userId, financialReturn)
+                        },
+                        onDelete = { id -> viewModel.deleteProject(id, role, userId) }
+                    )
                 }
             }
-
         }
     }
 }
-
-
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ProjectScreenPreview() {
-    ProjectScreen(
-        role = UserRole.MANAGER,
-        userId = "123",
-        onNavigateBack = {}
-    )}
